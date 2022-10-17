@@ -13,6 +13,7 @@
   "type": "module",
   "dependencies": {
     "@grammyjs/menu": "^1.1.2",
+    "@grammyjs/runner": "^1.0.4",
     "dotenv": "^16.0.1",
     "grammy": "^1.9.1",
     "moment": "^2.29.4",
