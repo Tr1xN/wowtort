@@ -1,0 +1,25 @@
+{
+  "name": "admin-panel",
+  "version": "1.0.0",
+  "description": "Admin panel for wowtort-telegram-bot",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon start",
+    "start": "node ./src/server.js",
+    "daemon": "pm2 start ./src/server.js"
+  },
+  "author": "Tr1xN",
+  "license": "ISC",
+  "dependencies": {
+    "@admin-bro/express": "^3.1.0",
+    "@admin-bro/mongoose": "^1.1.0",
+    "admin-bro": "^4.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
+    "express-session": "^1.17.2",
+    "mongoose": "^6.0.8",
+    "nodemon": "^2.0.13",
+    "tslib": "^2.3.1"
+  }
+}

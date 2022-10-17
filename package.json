@@ -1,0 +1,14 @@
+{
+  "name": "wowtort",
+  "version": "1.0.0",
+  "description": "wowtort monorepo",
+  "main": "index.js",
+  "scripts": {
+    "start": "pnpm --stream -r start",
+    "dev": "pnpm --stream -r run dev",
+    "daemon": "pnpm --stream -r run daemon"
+  },
+  "keywords": [],
+  "author": "Tr1xN",
+  "license": "ISC"
+}
