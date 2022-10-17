@@ -1,4 +1,5 @@
-import { Bot, Keyboard, InlineKeyboard, session } from 'grammy';
+import { Bot, session } from 'grammy';
+import { run } from "@grammyjs/runner";
 import dotenv from 'dotenv';
 import moment from 'moment';
 
@@ -298,9 +299,12 @@ bot.on('callback_query:data', async ctx => {
     await ctx.answerCallbackQuery();
 })
 
-bot.start()
+bot.catch((err) => {
+    const ctx = err.ctx;
+    console.error(`Error while handling update ${ctx.update.update_id}:`);
+    console.error(err);
+});
 
-process.once("SIGINT", () => bot.stop());
-process.once("SIGTERM", () => bot.stop());
+run(bot);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms * 1000));
