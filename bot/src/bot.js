@@ -19,15 +19,15 @@ moment.locale('uk');
 
 
 connectToMongo(process.env.MONGO_URI);
-let calendarParams = {}
+let calendarShift = -1
 if (moment().hours() < 11) {
-    calendarParams = { minDate: -1, maxDate: 81 };
+    calendarShift = -1;
 }
 else {
-    calendarParams = { minDate: 0, maxDate: 81 };
+    calendarShift = 0;
 }
 
-const calendar = new Calendar(calendarParams)
+const calendar = new Calendar(calendarShift, 81)
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const bot = new Bot(BOT_TOKEN);

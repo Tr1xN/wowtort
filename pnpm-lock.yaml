@@ -33,6 +33,7 @@ importers:
     specifiers:
       '@grammyjs/menu': ^1.1.2
       '@grammyjs/runner': ^1.0.4
+      dayjs: ^1.11.6
       dotenv: ^16.0.1
       grammy: ^1.9.1
       moment: ^2.29.4
@@ -43,6 +44,7 @@ importers:
     dependencies:
       '@grammyjs/menu': 1.1.2_grammy@1.11.2
       '@grammyjs/runner': 1.0.4
+      dayjs: 1.11.6
       dotenv: 16.0.3
       grammy: 1.11.2
       moment: 2.29.4
@@ -2272,6 +2274,10 @@ packages:
   /date-fns/2.15.0:
     resolution: {integrity: sha512-ZCPzAMJZn3rNUvvQIMlXhDr4A+Ar07eLeGsGREoWU19a3Pqf5oYa+ccd+B3F6XVtQY6HANMFdOQ8A+ipFnvJdQ==}
     engines: {node: '>=0.11'}
+    dev: false
+
+  /dayjs/1.11.6:
+    resolution: {integrity: sha512-zZbY5giJAinCG+7AGaw0wIhNZ6J8AhWuSXKvuc1KAyMiRsvGQWqh4L+MomvhdAYjN+lqvVCMq1I41e3YHvXkyQ==}
     dev: false
 
   /debug/2.6.9:

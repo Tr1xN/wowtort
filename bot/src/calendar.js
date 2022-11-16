@@ -1,49 +1,44 @@
 import { InlineKeyboard } from "grammy";
-import moment from "moment";
+import dayjs from "dayjs";
+import 'dayjs/locale/uk.js';
+
+dayjs.locale('uk');
 
 export default class Calendar {
-    constructor(options) {
-        this.minDate = options.minDate;
-        this.maxDate = options.maxDate;
-
-        this.page = moment().month();
+    constructor(dateShift, availableGap) {
+        this.dateShift = dateShift || 0;
+        this.availableDays = availableGap || 28;
+        this.pageDate = dayjs().startOf('month');
     }
 
-    getCalendarArray() {
-        const startWeek = moment().set('month', this.page).startOf('month').week();
-        const endWeek = moment().set('month', this.page).endOf('month').week();
-        const calendarArray = [];
+    getCalendarArray(date = dayjs()){
+        date = dayjs(date);
+        let firstDay = date.startOf('month');
+        const lastDay = date.endOf('month');
+        const calendar = [];
 
-        for (let week = startWeek; week <= endWeek; week++) {
-            calendarArray.push(Array(7).fill(0).map((e, i) => {
-                if (moment().set('month', this.page).week(week).startOf('week').add(e + i, 'day').month() !== moment().set('month', this.page).month()) {
+        for(firstDay; firstDay.isBefore(lastDay.add(1, 'day')); firstDay = firstDay.add(7, 'days')){
+            calendar.push(Array(7).fill(0).map((e, i) => {
+                if (firstDay.startOf('week').add(i, 'day').month() !== date.month()) {
                     return ' ';
                 }
-                return moment().set('month', this.page).week(week).startOf('week').add(e + i, 'day');
+                return firstDay.startOf('week').add(i, 'day');
             }))
         }
 
-        return calendarArray;
+        return calendar;
     }
 
-    getCalendarKeyboard() {
+    getCalendarKeyboard(date){
+        console.log(date);
+        if(date == undefined){
+            this.pageDate = dayjs().startOf('month');
+            date = this.pageDate
+        }
+
         const calendarKeyboard = new InlineKeyboard()
 
-        if(moment().set('month', this.page-1).endOf('month').isAfter(moment().add(this.minDate, 'day'))) {
-            calendarKeyboard.text('⬅️', 'prev')
-        }
-        else{
-            calendarKeyboard.text(' ', 'null')
-        }
-
-        calendarKeyboard.text(moment().set('month', this.page).format("MMMM") + ' ' + moment().year(), 'null')
-
-        if(moment().set('month', this.page+1).startOf('month').isBefore(moment().add(this.maxDate, 'day'))) {
-            calendarKeyboard.text('➡️', 'next')
-        }
-        else{
-            calendarKeyboard.text(' ', 'null')
-        }
+        calendarKeyboard.text(this.pageDate.format("MMMM") + ' ' + date.year(), 'null')
 
         calendarKeyboard.row()
             .text('Пн', 'null')
@@ -55,11 +50,11 @@ export default class Calendar {
             .text('Нд', 'null')
             .row()
 
-        this.getCalendarArray().forEach(week => {
+        this.getCalendarArray(date).forEach(week => {
             week.forEach(day => {
                 if (day !== ' ') {
-                    if (day.isAfter(moment().add(this.minDate, 'day')) && day.isBefore(moment().add(this.maxDate, 'day')) && day.day() != 0 && day.day() != 6) {
-                        calendarKeyboard.text(day.date(), day);
+                    if (day.isAfter(dayjs().add(this.dateShift, 'day')) && day.isBefore(dayjs().add(this.availableDays, 'day'))) {
+                        calendarKeyboard.text(day.date(), day.format('YYYY-MM-DD'));
                     }
                     else {
                         calendarKeyboard.text('❌' + day.date(), 'null');
@@ -71,16 +66,36 @@ export default class Calendar {
             calendarKeyboard.row()
         })
 
+        if(this.pageDate.subtract(1, 'month').endOf('month').isAfter(dayjs().add(this.dateShift, 'day'))) {
+            calendarKeyboard.text('⬅️', 'prev')
+        }
+        else{
+            calendarKeyboard.text(' ', 'null')
+        }
+
+        if(this.pageDate.add(1, 'month').startOf('month').isBefore(dayjs().add(this.availableDays, 'day'))) {
+            calendarKeyboard.text('➡️', 'next')
+        }
+        else{
+            calendarKeyboard.text(' ', 'null')
+        }
+
         return calendarKeyboard;
     }
 
     getNextMonth() {
-        this.page++;
+        if(this.pageDate.add(1, 'month').startOf('month').isBefore(dayjs().add(this.availableDays, 'day'))) {
+            this.pageDate = this.pageDate.add(1, 'month')
+            return this.getCalendarKeyboard(this.pageDate);
+        }
         return this.getCalendarKeyboard();
     }
 
     getPrevMonth() {
-        this.page--;
-        return this.getCalendarKeyboard();
+        if(this.pageDate.subtract(1, 'month').endOf('month').isAfter(dayjs().add(this.dateShift, 'day'))) {
+            this.pageDate = this.pageDate.subtract(1, 'month')
+            return this.getCalendarKeyboard(this.pageDate);
+        }
+            return this.getCalendarKeyboard();
     }
 }
